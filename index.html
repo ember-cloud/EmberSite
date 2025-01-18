@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>zHub</title>
+  <title>zHub Simplified</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #000;  /* Black background */
-      color: white;  /* White text for contrast */
+      background-color: #000; /* Black background */
+      color: white; /* White text for contrast */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -17,58 +17,32 @@
       position: relative; /* Ensure content is on top of the canvas */
     }
     .container {
-      background-color: #1e1e1e;  /* Dark grey background for the container */
+      background-color: #1e1e1e; /* Dark grey background for the container */
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       width: 100%;
-      max-width: 400px;  /* Ensures the container doesn't exceed 400px */
-      text-align: center;  /* Centers the content */
+      max-width: 400px;
+      text-align: center;
       position: relative; /* Keeps the container above the canvas */
       z-index: 2; /* Ensures the container is above the canvas */
-      max-height: 80vh; /* Prevents container from being too tall */
-      overflow-y: auto; /* Adds scroll if the content exceeds max-height */
     }
     .container h2 {
-      text-align: center;
       margin-bottom: 15px;
     }
-    .description {
-      font-size: 14px;
-      margin-top: 20px;
-      color: #ccc;
-      word-wrap: break-word; /* Ensures long words wrap properly */
-      overflow-wrap: break-word; /* Adds additional support for wrapping */
-    }
-    .copy-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
-    }
-    .copy-text {
-      font-size: 16px;
-      color: #f2f2f2;
-      margin-bottom: 10px;
-      word-wrap: break-word;
-      text-align: center;
-      overflow-wrap: break-word; /* Prevents text from overflowing */
-      word-break: break-word;  /* Ensures long words break and wrap correctly */
-      max-width: 100%; /* Makes sure it doesn't extend beyond container width */
-    }
-    .copy-button {
-      padding: 10px;
+    .action-button {
+      padding: 10px 20px;
       background-color: #9b4dca;
       color: white;
       border: none;
       border-radius: 5px;
-      font-size: 14px;
+      font-size: 16px;
       cursor: pointer;
-      width: 100%;
-      max-width: 200px; /* Ensures button width does not exceed container width */
-      margin-top: 10px; /* Adds spacing above the button */
+      margin-top: 20px;
+      text-decoration: none;
+      display: inline-block;
     }
-    .copy-button:hover {
+    .action-button:hover {
       background-color: #7a3e99;
     }
     #mycanvas {
@@ -86,30 +60,13 @@
   <!-- Canvas for the constellation effect -->
   <canvas id="mycanvas"></canvas>
 
+  <!-- Main content container -->
   <div class="container">
     <h2>Welcome to ZHUB</h2>
-
-    <!-- Description Section -->
-    <p class="description">
-      Egg Viewer script, when executed you can see whats inside of your exclusive eggs
-    </p>
-
-    <!-- Text with Copy Button -->
-    <div class="copy-container">
-      <p class="copy-text" id="copyText">loadstring(game:HttpGet("https://raw.githubusercontent.com/CxssieDev/ZScriptHUB/refs/heads/main/Utility"))()</p>
-      <button class="copy-button" id="copyButton">Copy Script</button>
-    </div>
+    <a href="https://example.com" class="action-button">Go to Link</a>
   </div>
 
   <script>
-    // Copy text to clipboard
-    document.getElementById('copyButton').addEventListener("click", function() {
-      const textToCopy = document.getElementById('copyText').innerText;
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        alert("Script copied to clipboard!");
-      });
-    });
-
     // Canvas and constellation effect code
     const canvas = document.getElementById('mycanvas');
     const ctx = canvas.getContext('2d');
@@ -117,40 +74,30 @@
     canvas.height = window.innerHeight;
 
     let particles = [];
-    let spawnCooldown = 0; // Cooldown timer for particle spawn
-    const spawnRate = 3; // Number of frames before new particles can spawn again (increase to slow it down)
 
-    window.addEventListener('resize', function (e) {
+    window.addEventListener('resize', function () {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     });
 
-    let hueCol = 0;
     const mouse = {
       x: undefined,
       y: undefined,
     };
 
-    // Throttle particle creation with cooldown
     canvas.addEventListener('click', function (e) {
       mouse.x = e.x;
       mouse.y = e.y;
-      if (spawnCooldown === 0) {
-        for (let i = 0; i < 5; i++) {
-          particles.push(new Particle());
-        }
-        spawnCooldown = spawnRate;
+      for (let i = 0; i < 5; i++) {
+        particles.push(new Particle());
       }
     });
 
     canvas.addEventListener('mousemove', function (e) {
       mouse.x = e.x;
       mouse.y = e.y;
-      if (spawnCooldown === 0) {
-        for (let i = 0; i < 5; i++) {
-          particles.push(new Particle());
-        }
-        spawnCooldown = spawnRate;
+      for (let i = 0; i < 5; i++) {
+        particles.push(new Particle());
       }
     });
 
@@ -158,10 +105,9 @@
       constructor() {
         this.x = mouse.x;
         this.y = mouse.y;
-        // Reduced speed by half
-        this.speedX = Math.random() * 1.5 - 0.75;  // Random speed between -0.75 and 0.75
-        this.speedY = Math.random() * 1.5 - 0.75;  // Random speed between -0.75 and 0.75
-        this.color = 'hsl(270, 100%, 50%)';  // Fixed color for purple
+        this.speedX = Math.random() * 1.5 - 0.75;
+        this.speedY = Math.random() * 1.5 - 0.75;
+        this.color = 'hsl(270, 100%, 50%)';
         this.size = Math.random() * 5 + 1;
       }
       update() {
@@ -204,7 +150,6 @@
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       handleParticles();
-      if (spawnCooldown > 0) spawnCooldown--; // Decrement cooldown timer
       requestAnimationFrame(animate);
     }
     animate();
