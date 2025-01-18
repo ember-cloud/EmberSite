@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZHUB Key</title>
+  <title>zHub</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -26,40 +26,50 @@
       text-align: center;  /* Centers the content */
       position: relative; /* Keeps the container above the canvas */
       z-index: 2; /* Ensures the container is above the canvas */
+      max-height: 80vh; /* Prevents container from being too tall */
+      overflow-y: auto; /* Adds scroll if the content exceeds max-height */
     }
     .container h2 {
       text-align: center;
       margin-bottom: 15px;
     }
-    .input-field {
-      width: 95%;  /* Makes the text box the same width as the buttons */
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      color: #000;
+    .description {
+      font-size: 14px;
+      margin-top: 20px;
+      color: #ccc;
+      word-wrap: break-word; /* Ensures long words wrap properly */
+      overflow-wrap: break-word; /* Adds additional support for wrapping */
     }
-    .button {
-      width: 100%;  /* Makes the buttons full width */
+    .copy-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .copy-text {
+      font-size: 16px;
+      color: #f2f2f2;
+      margin-bottom: 10px;
+      word-wrap: break-word;
+      text-align: center;
+      overflow-wrap: break-word; /* Prevents text from overflowing */
+      word-break: break-word;  /* Ensures long words break and wrap correctly */
+      max-width: 100%; /* Makes sure it doesn't extend beyond container width */
+    }
+    .copy-button {
       padding: 10px;
-      background-color: #9b4dca;  /* Purple background for buttons */
+      background-color: #9b4dca;
       color: white;
       border: none;
       border-radius: 5px;
-      font-size: 16px;
+      font-size: 14px;
       cursor: pointer;
-      margin-bottom: 5px;  /* 5px spacing between buttons */
+      width: 100%;
+      max-width: 200px; /* Ensures button width does not exceed container width */
+      margin-top: 10px; /* Adds spacing above the button */
     }
-    .button:hover {
-      background-color: #7a3e99;  /* Darker purple on hover */
-    }
-    .link-button {
-      background-color: #6a1b9a;  /* Slightly darker purple for the second button */
-      margin-top: 5px;
-    }
-    .link-button:hover {
-      background-color: #4e148c;  /* Darker purple on hover */
+    .copy-button:hover {
+      background-color: #7a3e99;
     }
     #mycanvas {
       position: absolute;
@@ -77,78 +87,27 @@
   <canvas id="mycanvas"></canvas>
 
   <div class="container">
-    <h2>Generate Key</h2>
-    <label for="username">Made by Kash</label>
-    <input type="text" id="username" class="input-field" placeholder="Enter Username" required>
+    <h2>Welcome to ZHUB</h2>
 
-    <button id="sendKeyButton" class="button">Send Key to Discord</button>
-    
-    <!-- New Button to Open Discord Link -->
-    <button id="openDiscordButton" class="button link-button">Join Our Discord</button>
+    <!-- Description Section -->
+    <p class="description">
+      Egg Viewer script, when executed you can see whats inside of your exclusive eggs
+    </p>
+
+    <!-- Text with Copy Button -->
+    <div class="copy-container">
+      <p class="copy-text" id="copyText">loadstring(game:HttpGet("https://raw.githubusercontent.com/CxssieDev/ZScriptHUB/refs/heads/main/Utility"))()</p>
+      <button class="copy-button" id="copyButton">Copy Script</button>
+    </div>
   </div>
 
   <script>
-    // Function to encrypt the username (shift letters by 5)
-    function encryptUsername(username) {
-      let encrypted = '';
-      username = username.toLowerCase(); // Convert to lowercase
-
-      for (let i = 0; i < username.length; i++) {
-        let char = username[i];
-        if (char >= 'a' && char <= 'z') {
-          // Shift letter by 5
-          let newChar = String.fromCharCode(((char.charCodeAt(0) - 97 + 5) % 26) + 97);
-          encrypted += newChar;
-        } else {
-          // If it's not a letter, keep the character as it is
-          encrypted += char;
-        }
-      }
-      return encrypted;
-    }
-
-    // Webhook URL
-    const webhookUrl = "https://discord.com/api/webhooks/1320336477678207041/d7uhGZxGtFOaop_tN0aMtFNxA_rkarV4HiHqgW9DuHiqyuWa44swQbGkeMwbf2dFvz9a";
-
-    document.getElementById('sendKeyButton').addEventListener("click", function() {
-      const username = document.getElementById('username').value.trim();
-
-      if (!username) {
-        alert("Please enter a username.");
-        return;
-      }
-
-      // Encrypt the username
-      const encryptedKey = encryptUsername(username);
-      const message = {
-        content: `Player: ${username}\nEncrypted Key: ${encryptedKey}`,
-        username: "Key Generator Bot",
-        avatar_url: "https://i.imgur.com/AfFp7pu.png"
-      };
-
-      // Send the encrypted key to the Discord webhook
-      fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(message)
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Key sent to Discord:", data);
-        document.getElementById('sendKeyButton').innerText = "Key Sent!";
-        document.getElementById('username').value = '';  // Clear the input field
-      })
-      .catch(error => {
-        console.error("Error sending key:", error);
-        document.getElementById('sendKeyButton').innerText = "Error Sending Key!";
+    // Copy text to clipboard
+    document.getElementById('copyButton').addEventListener("click", function() {
+      const textToCopy = document.getElementById('copyText').innerText;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        alert("Script copied to clipboard!");
       });
-    });
-
-    // Open the Discord link in a new tab when the new button is clicked
-    document.getElementById('openDiscordButton').addEventListener("click", function() {
-      window.open("https://discord.gg/paWHA2gc56", "_blank");
     });
 
     // Canvas and constellation effect code
